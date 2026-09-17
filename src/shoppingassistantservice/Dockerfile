@@ -19,17 +19,23 @@ FROM --platform=$BUILDPLATFORM python:3.14.7-slim@sha256:ce40764625a4ff50df35482
 
 FROM base AS builder
 
+ARG PIP_INDEX_URL=https://pypi.org/simple
+
 RUN apt-get -qq update \
     && apt-get install -y --no-install-recommends g++ \
     && rm -rf /var/lib/apt/lists/*
 
 # get packages
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --index-url "$PIP_INDEX_URL" --retries 10 --timeout 120 -r requirements.txt
 
 FROM base
 # Enable unbuffered logging
 ENV PYTHONUNBUFFERED=1
+
+RUN apt-get -qq update \
+    && apt-get install -y --no-install-recommends libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
 
 # get packages
 WORKDIR /shoppingassistantservice

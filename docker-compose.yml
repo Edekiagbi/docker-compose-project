@@ -93,6 +93,7 @@ services:
       - SHIPPING_SERVICE_ADDR=shippingservice:50051
       - CHECKOUT_SERVICE_ADDR=checkoutservice:5050
       - AD_SERVICE_ADDR=adservice:9555
+      - SHOPPING_ASSISTANT_SERVICE_ADDR=shoppingassistantservice:8080
     depends_on:
       - productcatalogservice
       - currencyservice
@@ -144,3 +145,19 @@ services:
     environment:
       - PORT=50051
       - DISABLE_PROFILER=1
+
+  shoppingassistantservice:
+    profiles:
+      - ai
+    build:
+      context: ./src/shoppingassistantservice
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    environment:
+      - PROJECT_ID=${PROJECT_ID:-}
+      - REGION=${REGION:-}
+      - ALLOYDB_DATABASE_NAME=${ALLOYDB_DATABASE_NAME:-}
+      - ALLOYDB_TABLE_NAME=${ALLOYDB_TABLE_NAME:-}
+      - ALLOYDB_CLUSTER_NAME=${ALLOYDB_CLUSTER_NAME:-}
+      - ALLOYDB_INSTANCE_NAME=${ALLOYDB_INSTANCE_NAME:-}
+      - ALLOYDB_SECRET_NAME=${ALLOYDB_SECRET_NAME:-}
