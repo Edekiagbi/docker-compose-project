@@ -19,6 +19,8 @@ FROM --platform=$BUILDPLATFORM python:3.14.7-slim@sha256:ce40764625a4ff50df35482
 
 FROM base AS builder
 
+ARG PIP_INDEX_URL=https://pypi.org/simple
+
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
@@ -28,7 +30,7 @@ RUN apt-get update \
 
 # get packages
 COPY requirements.txt .
-RUN pip install --no-cache-dir --prefix="/install" -r requirements.txt
+RUN pip install --no-cache-dir --index-url "$PIP_INDEX_URL" --retries 10 --timeout 120 --prefix="/install" -r requirements.txt
 
 FROM base
 

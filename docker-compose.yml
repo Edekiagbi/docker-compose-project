@@ -60,6 +60,8 @@ services:
   currencyservice:
     build:
       context: ./src/currencyservice
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
     ports:
       - "7000:7000"
     environment:
@@ -69,6 +71,8 @@ services:
   emailservice:
     build:
       context: ./src/emailservice
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
     ports:
       - "8081:8081"
     environment:
@@ -101,6 +105,8 @@ services:
   paymentservice:
     build:
       context: ./src/paymentservice
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
     ports:
       - "50052:50052"
     environment:
@@ -119,6 +125,8 @@ services:
   recommendationservice:
     build:
       context: ./src/recommendationservice
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
     ports:
       - "8082:8082"
     environment:

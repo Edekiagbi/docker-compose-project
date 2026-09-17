@@ -17,11 +17,18 @@ ARG BUILDPLATFORM=linux/amd64
 
 FROM --platform=$BUILDPLATFORM node:20.20.2-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293 AS builder
 
+ARG NPM_REGISTRY=https://registry.npmmirror.com
+
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
 
-RUN npm install --only=production --no-audit --no-fund
+RUN npm install --only=production --no-audit --no-fund \
+    --registry="$NPM_REGISTRY" \
+    --fetch-retries=10 \
+    --fetch-retry-mintimeout=20000 \
+    --fetch-retry-maxtimeout=120000 \
+    --fetch-timeout=600000
 
 FROM node:20.20.2-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
 
